@@ -11,6 +11,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/user");
 
 const PORT = 3000;
 
+// Login API............................................................
 app.post('/login', (req, res) => {
     const {email, password} = req.body;
     userModel.findOne({email: email})
@@ -27,17 +28,17 @@ app.post('/login', (req, res) => {
     })
 })
 
-
+// Register API ........................................................
 app.post('/register', (req, res) => {
-    // userModel.create(req.body)
-    // .then(userRegister => res.json(userRegister))
-    // .catch(err => res.json(err))
     
     const userdata = req.body;
     userModel.findOne({email: userdata.email})
     .then(user => {
         if(user){
             res.json("user already exists")
+        }
+        else if(userdata.password !== userdata.checkpassword){
+            res.json("password does not match")
         }else{
             userModel.create(userdata);
             res.json(user)
